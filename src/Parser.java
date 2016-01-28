@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Vector;
 
 /**
  * Created by m_bot on 28/01/2016.
@@ -13,6 +14,11 @@ public class Parser {
     int pools;
     int nrServers;
 
+    public Vector<Vector<Integer>> getFreeSpace() {
+        return freeSpace;
+    }
+
+    Vector<Vector<Integer>> freeSpace = new Vector<Vector<Integer>>();
     int[][] map;
     HashMap<Integer, Server> servers = new HashMap<>();
 
@@ -29,6 +35,12 @@ public class Parser {
 
             map = new int[rows][slots];
 
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < slots; j++) {
+                    map[i][j] = -2;
+                }
+            }
+
             for (int i = 0; i < unavailableSlots; i++) {
                 String temp = reader.readLine();
                 String[] temp1 = temp.split(" ");
@@ -44,6 +56,24 @@ public class Parser {
                 Server server = new Server(Integer.parseInt(temp1[0]), Integer.parseInt(temp1[1]));
                 servers.put(index, server);
                 index++;
+            }
+
+
+            for (int i = 0 ; i < rows; i++) {
+                boolean countAdvance = true;
+                freeSpace.add(new Vector<Integer> ());
+                freeSpace.get(i).add(0);
+                for (int j = 0; j < slots; j++) {
+                    if (map[i][j] == 0) {
+                        countAdvance = true;
+                        freeSpace.get(i).set(freeSpace.get(i).size()-1, freeSpace.get(i).get(freeSpace.get(i).size()-1)+1);
+                    } else {
+                        if (countAdvance) {
+                            freeSpace.get(i).add(0);
+                            countAdvance = false;
+                        }
+                    }
+                }
             }
 
         } catch (IOException x) {
@@ -89,5 +119,14 @@ public class Parser {
 
     public HashMap<Integer, Server> getServers() {
         return servers;
+    }
+
+    public void setMapPosition(int x, int y, int size, int value){
+
+            for(int i = 0; i < size; i++){
+                map[y][x + i] = value;
+            }
+
+
     }
 }
