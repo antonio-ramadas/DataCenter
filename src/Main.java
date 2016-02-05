@@ -108,7 +108,34 @@ public class Main {
 
     }
 
-    public int chooseServer() {
-        return -1;
+    //ainda nao acabou
+    public Server chooseServer() {
+        int maximun = -1;
+        Vector<Server> bestServers = new Vector<Server>();
+
+        //escolher os servidores com maior capacidade
+        for (int i = 0; i < p.getServers().size(); i++) {
+            if (p.getServers().get(i).getCapacity() >= maximun) {
+                if (p.getServers().get(i).getCapacity() > maximun) {
+                    bestServers = new Vector<Server>();
+                    maximun = p.getServers().get(i).getCapacity();
+                }
+                bestServers.add(p.getServers().get(i));
+            }
+        }
+
+        if (maximun == -1) {
+            return null;
+        }
+
+        //escolher os servidores com menor tamanho
+        Server bestServer = bestServers.get(0);
+        for (int i = 1; i < bestServers.size(); i++) {
+            if (bestServers.get(i).getSlots() < bestServer.getSlots()) {
+                bestServer = bestServers.get(i);
+            }
+        }
+
+        return null;
     }
 }
